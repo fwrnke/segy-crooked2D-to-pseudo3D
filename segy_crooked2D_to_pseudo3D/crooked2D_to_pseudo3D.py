@@ -1,5 +1,5 @@
 """
-Create pseudo-3D cube from crooked 2D seismic profile (for Petrel AVO workflow).
+Create pseudo-3D cube from crooked 2D seismic profile (e.g. for Petrel AVO workflow).
 The user can specify the number of output inlines and the distance spacing 
 between the generated inlines (which are just duplicates of the input 2D data).
 

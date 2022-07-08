@@ -19,7 +19,7 @@ setuptools.setup(
     description='Create pseudo-3D cube from crooked 2D SEG-Y file',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    license='GNU GPLv3+',
+    license='MIT',
     url='https://github.com/fwrnke/segy-crooked2D-to-pseudo3D',
     project_urls={
         'Bug Tracker': 'https://github.com/fwrnke/segy-crooked2D-to-pseudo3D/issues',
