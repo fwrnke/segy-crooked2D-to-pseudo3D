@@ -26,7 +26,7 @@ You can also download the repository as a ZIP archive. To install `segy-crooked2
 `segy-crooked2D-to-pseudo3D` was designed to be mainly used from the command line and provides an interface that can be used by running:
 
 ```bash
-create_pseudo3D {input_path} [optional parameters]
+>>> create_pseudo3D {input_path} [optional parameters]
 ```
 
 This script requires one positional argument:
