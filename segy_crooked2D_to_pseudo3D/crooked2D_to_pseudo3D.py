@@ -70,7 +70,7 @@ def get_azimuth(coords, kind:str = 'deg'):
         Azimuth angle of fitted line through coordinates.
 
     """
-    angle = np.arctan((coords[-1, 0] - coords[0, 0])/(coords[-1, 1] - coords[0, 1]))
+    angle = np.arctan((coords[-1, 0] - coords[0, 0]) / (coords[-1, 1] - coords[0, 1]))
     if kind.lower() in ['deg', 'degree', 'degrees']:
         angle = np.rad2deg(angle)
     
@@ -236,12 +236,46 @@ def open_line(path,
 
 def setup_cube_geometry(x, 
                         y, 
-                        n_ilines:int,
+                        n_ilines:int = None,
                         spacing:float = None, 
                         origin:str = 'coordinates',
                         return_rotated_coords:bool = False, 
                         verbose:bool = False):
-    
+    """
+    Create pseudo-3D cube geometry from crooked 2D line coordinates.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        Easting (x) coordinate array.
+    y : np.ndarray
+        Northing (y) coordinate array.
+    n_ilines : int, optional
+        Number of inlines to create. If None: ``n_ilines`` will be calculated 
+        based on line crookedness and CDP bin size of 2D line.
+    spacing : float, optional
+        Inline spacing (in CRS units, e.g. meters). If None: ``spacing`` will be calculated 
+        based on line crookedness and  ``n_ilines``.
+    origin : str, optional
+        Rotation center coordinates. Can be 'coordinates' (default, using input coordinates) or 
+        'fitted' (using fitted line coordinates).
+    return_rotated_coords : bool, optional
+        Return rotated cube (3D) and line (2D) coordinates for comparison (default: False).
+    verbose : bool, optional
+        Print additional information to STDOUT (default: False).
+
+    Returns
+    -------
+    coords_cube : np.ndarray
+        Array of 3D cube iline/xline coordinates with shape (n_traces x n_ilines, 2).
+    coords_cube_rot : np.ndarray, optional
+        Array of rotated 3D cube iline/xline coordinates with shape (n_traces x n_ilines, 2).
+    coords_rot : np.ndarray
+        Array of rotated input 2D coordinates with shape (n_traces, 2).
+    n_ilines : int
+        Number of created inlines.
+
+    """
     x = np.asarray(x)
     y = np.asarray(y)
     assert x.size == y.size
@@ -584,10 +618,7 @@ def main(input_args=None):
     
     path_input = args.input_path
     basepath, filename = os.path.split(path_input)
-    basename, suffix = os.path.splitext(filename)    
-    if suffix == '':
-        basepath = path_input
-        basename, suffix = None, None
+    basename, suffix = os.path.splitext(filename)
     
     # (1) single input file
     if os.path.isfile(path_input):
@@ -613,35 +644,4 @@ def main(input_args=None):
     
 #%% MAIN
 if __name__ == '__main__':
-    
-    cmd_str = '''D:/scripts/petrel_2Dto3D/MichaelM_Order3437.411138586.SEGY.00001.APB13-2D-PR5170-T-PSTM-RNAS.2D.Near_Angle_Stack.APB13-001.0001002.0011322
-        --n_ilines 5
-        --spacing 15
-        --verbose
-        '''.split()
-    cmd_str[0] = 'D:/scripts/petrel_2Dto3D'
-    
-    main(cmd_str)
-        
-    #%% [DEBUG] plot coordinates
-    # # optional
-    # import matplotlib.pyplot as plt
-    
-    # fig, ax = plt.subplots(1, 1, figsize=(8, 8))
-    # ax.plot(cdp_x, cdp_y, c='k', marker='o', markersize=1, label='header coords')
-    # # ax.plot(coords[:,0], coords[:,1], c='r', label='stacked coords')
-    # ax.plot(coords_rot[:,0], coords_rot[:,1], c='b', label='rotated coords')
-    
-    # # [CUBE] 
-    # ## rotated
-    # ax.scatter(coords_cube_rot[:,0], coords_cube_rot[:,1], s=1, c='blue', alpha=0.5, label='pseudo-3D grid (rotated)')
-    # ## original
-    # # ax.scatter(coords_cube[:,0], coords_cube[:,1], s=1, c='red', alpha=0.5, label='pseudo-3D grid')
-    # ax.scatter(coords_cube[:,0], coords_cube[:,1], s=1, c=np.arange(coords_cube[:,0].size), cmap='viridis', 
-    #            alpha=0.5, label='pseudo-3D grid')
-    
-    # ax.legend()
-    
-    # ax.set_aspect('equal')
-    # fig.tight_layout()
-    
+    main()
