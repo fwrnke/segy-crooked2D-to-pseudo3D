@@ -251,8 +251,8 @@ def setup_cube_geometry(x,
     y : np.ndarray
         Northing (y) coordinate array.
     n_ilines : int, optional
-        Number of inlines to create. If None: ``n_ilines`` will be calculated 
-        based on line crookedness and CDP bin size of 2D line.
+        Number of inlines to create. Should be odd number and will be increased by 1 if not odd.
+        If None: ``n_ilines`` will be calculated based on line crookedness and bin size of 2D line.
     spacing : float, optional
         Inline spacing (in CRS units, e.g. meters). If None: ``spacing`` will be calculated 
         based on line crookedness and  ``n_ilines``.
@@ -314,7 +314,12 @@ def setup_cube_geometry(x,
                               coords_rot[:,0].min() - origin[0])))
     if n_ilines is None and spacing is None:
         n_ilines = int(np.ceil(diff_max / bin_size))
-        n_ilines = n_ilines if n_ilines % 2 == 1 else n_ilines + 1
+    
+    if n_ilines % 2 == 1:
+        n_ilines = n_ilines  
+    else:
+        if verbose: print(f'[INFO]    Dominant profile orientation:  {azimuth:.1f} degree')
+        n_ilines + 1
     
     if spacing is None:
         # get iline spacing from crookedness of 2D line
@@ -546,7 +551,7 @@ def define_input_args():
     parser.add_argument('--txt_suffix', type=str, default='_pseudo-3D', 
                         help='Suffix to append to output filename.')
     parser.add_argument('--n_ilines', type=int, 
-                        help='Number of inlines for pseudo-3D cube (should be odd!).')
+                        help='Number of inlines for pseudo-3D cube (should be odd).')
     parser.add_argument('--spacing', type=int, 
                         help='Inline spacing (in units of CRS, e.g. meter).')
     parser.add_argument('--overwrite', action='store_true',
@@ -612,7 +617,7 @@ def expand_single_segy(path_input, args, verbose) -> None:
 
 def main(input_args=None):
     parser = define_input_args()
-    args = parser.parse_args(cmd_str)
+    args = parser.parse_args(input_args)
     
     verbose = args.verbose
     
