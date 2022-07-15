@@ -13,7 +13,7 @@ with read('README.md') as f:
 
 setuptools.setup(
     name='segy-crooked2D-to-pseudo3D',
-    version=0.1,
+    version='0.1.0',
     author='Fynn Warnke',
     author_email='fwrnke@mailbox.org',
     description='Create pseudo-3D cube from crooked 2D SEG-Y file',
