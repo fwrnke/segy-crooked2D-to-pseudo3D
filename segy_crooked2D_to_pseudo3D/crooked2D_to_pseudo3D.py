@@ -522,7 +522,7 @@ def create_pseudo3D(fname,
             
             if verbose and (i % 1 == 0):
                 print(f'[INFO]    Writing inline < {il} >')
-                print(f'[INFO]      i: {i}, il: {il}, il0: {il0}, iln: {iln}')
+                # print(f'[INFO]      i: {i}, il: {il}, il0: {il0}, iln: {iln}')
         
         if hbinary is not None:
             if verbose: print('[INFO]    Adding information from input 2D line')
@@ -621,9 +621,15 @@ def main(input_args=None):
     
     verbose = args.verbose
     
+    # sanity checks
     path_input = args.input_path
     basepath, filename = os.path.split(path_input)
     basename, suffix = os.path.splitext(filename)
+    
+    if args.output_dir is not None:
+        if not os.path.isdir(args.output_dir):
+            raise IOError('Output directory does not exist.' + \
+                          ' Please create directory manually before running this script!')
     
     # (1) single input file
     if os.path.isfile(path_input):
