@@ -318,8 +318,8 @@ def setup_cube_geometry(x,
     if n_ilines % 2 == 1:
         n_ilines = n_ilines  
     else:
-        if verbose: print(f'[INFO]    Dominant profile orientation:  {azimuth:.1f} degree')
-        n_ilines + 1
+        print(f'[INFO]    Even number (> {n_ilines} <) of inlines --> increased by one.')
+        n_ilines += 1
     
     if spacing is None:
         # get iline spacing from crookedness of 2D line
